@@ -20,6 +20,7 @@ a {
 	text-decoration: none;
 }
 
+
 ul,
 ol,
 li {
@@ -43,7 +44,7 @@ input {
 }
 
 .active {
-	border: 2px solid rgb(188, 26, 26);
+	border: 10px solid rgb(188, 26, 26);
 }
 
 .container {

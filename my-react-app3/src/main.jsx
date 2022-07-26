@@ -22,32 +22,26 @@ class Input extends React.Component {
 		super(props);
 		this.state = { isActive: false };
 		// Эта привязка обязательна для работы `this` в колбэке.
-		this.handleChange = this.handleChange.bind(this);
+		this.handleFocus = this.handleFocus.bind(this);
+		this.handleBlur = this.handleBlur.bind(this);
 	}
 
 	handleFocus() {
-		this.setState(function () {
-			isActive: true
-		});
+		this.setState({ isActive: true })
 	}
 
 	handleBlur() {
-		this.setState(function () {
-			isActive: false
-		});
+		this.setState({ isActive: false })
 	}
 
 
 	render() {
-		let className = 'input';
-		if (this.state.isActive === true) {
-			className = className + ' active';
-		} else {
-			className = className - ' active';
-		}
-		return <input className={className} onfocus={this.handleFocus} onblur={this.handleBlur} placeholder="Введите имя" />
+		let className = '';
+		if (this.state.isActive) {
+			className += 'active';
+		} else className = "";
+		return <input className={className} onFocus={this.handleFocus} onBlur={this.handleBlur} placeholder="Введите имя" />
 	}
-
 }
 
 class Form extends React.Component {
