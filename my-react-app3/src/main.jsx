@@ -25,19 +25,27 @@ class Input extends React.Component {
 		this.handleChange = this.handleChange.bind(this);
 	}
 
-	handleChange() {
-		this.setState(prevState => ({
-			isActive: !prevState.isActive
-		}));
-		alert(isActive);
+	handleFocus() {
+		this.setState(function () {
+			isActive: true
+		});
 	}
 
+	handleBlur() {
+		this.setState(function () {
+			isActive: false
+		});
+	}
+
+
 	render() {
-		let className;
-		if (this.state.isActive) {
-			className += 'active';
+		let className = 'input';
+		if (this.state.isActive === true) {
+			className = className + ' active';
+		} else {
+			className = className - ' active';
 		}
-		return <input className={className} onChange={this.handleChange} placeholder="Введите имя" />
+		return <input className={className} onfocus={this.handleFocus} onblur={this.handleBlur} placeholder="Введите имя" />
 	}
 
 }

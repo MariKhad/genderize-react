@@ -42,7 +42,7 @@ input {
 	font-size: 18px;
 }
 
-active {
+.active {
 	border: 2px solid rgb(188, 26, 26);
 }
 
