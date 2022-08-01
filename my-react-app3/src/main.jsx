@@ -6,50 +6,43 @@ import './index.css'
 const serverUrl1 = 'https://api.genderize.io';
 const serverUrl2 = 'https://api.nationalize.io';
 
-class Button extends React.Component {
 
-	handleClick() {
-		alert("Кнопка нажата");
-	}
-
-	render() {
-		return <button onClick={this.handleClick}>Отправить</button>
-	}
-}
-
-class Input extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = { isActive: false };
-		// Эта привязка обязательна для работы `this` в колбэке.
-		this.handleFocus = this.handleFocus.bind(this);
-		this.handleBlur = this.handleBlur.bind(this);
-	}
-
-	handleFocus() {
-		this.setState({ isActive: true })
-	}
-
-	handleBlur() {
-		this.setState({ isActive: false })
-	}
-
-
-	render() {
-		let className = '';
-		if (this.state.isActive) {
-			className += 'active';
-		} else className = "";
-		return <input className={className} onFocus={this.handleFocus} onBlur={this.handleBlur} placeholder="Введите имя" />
-	}
+function getData(url) {
+	return fetch(url)
+		.then(response => response.json())
+		.then(result => result)
+		.then(alert(result));
 }
 
 class Form extends React.Component {
+
+	constructor(props) {
+		super(props);
+		this.state = { name: undefined, gender: undefined, country: undefined };
+		// Эта привязка обязательна для работы `this` в колбэке.
+		this.handleSubmit = this.handleSubmit.bind(this);
+	}
+
+
+	handleSubmit(e) {
+		e.preventDefault();
+		this.setState({ name: "????" })
+		const url1 = `${serverUrl1}?name=${this.state.name}`;
+		const url2 = `${serverUrl2}?name=${this.state.name}`;
+		result1 = getData(url1);
+		this.setState({ gender: result.gender });
+		result2 = getData(url2);
+		this.setState({ country: result2.country[0].country_id });
+		let finalResult = `${this.state.name} is ${this.state.gender} from ${this.state.country} `;
+	}
+
+
+
 	render() {
-		return <form className="form">
+		return <form className="form" onSubmit={this.handleSubmit}>
 			<p>
-				<Input />
-				<Button />
+				<input placeholder="Введите имя" />
+				<button>Отправить</button>
 			</p>
 		</form>
 	}
@@ -57,7 +50,7 @@ class Form extends React.Component {
 
 class ResultDiv extends React.Component {
 	render() {
-		return <div className="task__result">Here will be result</div>
+		return <div className="task__result">{this.props.result}</div>
 	}
 }
 
@@ -68,12 +61,18 @@ class Title extends React.Component {
 }
 
 class Genderize extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = { result: "Here will be result" };
+	}
+
+
 	render() {
 		return <div className="container">
 			<div className="task__body">
 				<Title />
 				<Form />
-				<ResultDiv />
+				<ResultDiv result={this.state.result} />
 			</div>
 		</div>
 	}
@@ -86,3 +85,14 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 )
 
 
+/* handleSubmit(e) {
+	e.preventDefault();
+	const firstName = formElements.inputValue.value;
+	const url1 = `${serverUrl1}?name=${firstName}`;
+	const url2 = `${serverUrl2}?name=${firstName}`;
+	result1 = getData(url1);
+	let gender = result.gender;
+	result2 = getData(url2);
+	let country = result2.country[0].country_id;
+	formElements.taskResult.textContent = `${firstName} is ${gender} from ${country} `;
+} */
