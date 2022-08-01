@@ -10,8 +10,7 @@ const serverUrl2 = 'https://api.nationalize.io';
 function getData(url) {
 	return fetch(url)
 		.then(response => response.json())
-		.then(result => result)
-		.then(alert(result));
+		.then(result => result);
 
 
 	class Form extends React.Component {
@@ -82,16 +81,3 @@ function getData(url) {
 			<Genderize />
 		</React.StrictMode>
 	)
-
-
-/* handleSubmit(e) {
-	e.preventDefault();
-	const firstName = formElements.inputValue.value;
-	const url1 = `${serverUrl1}?name=${firstName}`;
-	const url2 = `${serverUrl2}?name=${firstName}`;
-	result1 = getData(url1);
-	let gender = result.gender;
-	result2 = getData(url2);
-	let country = result2.country[0].country_id;
-	formElements.taskResult.textContent = `${firstName} is ${gender} from ${country} `;
-} */
