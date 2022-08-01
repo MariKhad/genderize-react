@@ -6,15 +6,6 @@ import './index.css'
 const serverUrl1 = 'https://api.genderize.io';
 const serverUrl2 = 'https://api.nationalize.io';
 
-
-async function getData(url) {
-	const response = await fetch(url);
-	const result = await response.json();
-	return result;
-}
-
-
-
 class Form extends React.Component {
 
 	constructor(props) {
@@ -29,12 +20,20 @@ class Form extends React.Component {
 		e.preventDefault();
 		const url1 = `${serverUrl1}?name=${this.state.name}`;
 		const url2 = `${serverUrl2}?name=${this.state.name}`;
-		result1 = getData(url1);
-		this.setState({ gender: result1.gender });
-		result2 = getData(url2);
-		this.setState({ country: result2.country[0].country_id });
-		let finalResult = `${this.state.name} is ${this.state.gender} from ${this.state.country} `;
-		alert(finalResult);
+		fetch(url1)
+			.then(response => response.json())
+			.then(result1 => {
+				this.setState({ gender: result1.gender });
+				fetch(url2)
+					.then(response => response.json())
+					.then(result2 => {
+						this.setState({ country: result2.country[0].country_id });
+						let finalResult = `${this.state.name} is ${this.state.gender} from ${this.state.country} `;
+						alert(finalResult);
+					});
+
+			});
+
 	}
 
 
