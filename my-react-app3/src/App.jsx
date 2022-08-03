@@ -1,34 +1,90 @@
+import React from 'react'
+import ReactDOM from 'react-dom/client'
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
 import './App.css'
+import { render } from 'react-dom'
 
 function App() {
-  const [count, setCount] = useState(0)
+	return <Genderize />
+};
 
-  return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
-  )
+const serverUrl1 = 'https://api.genderize.io';
+const serverUrl2 = 'https://api.nationalize.io';
+
+class Form extends React.Component {
+
+
+	render() {
+		return <form className="form" onSubmit={this.props.submit} >
+			<p>
+				<input defaultValue={this.props.name} placeholder="Введите имя" onChange={this.props.change} />
+				<button>Отправить</button>
+			</p>
+		</form >
+	}
+}
+
+class ResultDiv extends React.Component {
+	render() {
+		return <div className="task__result">{this.props.result}</div>
+	}
+}
+
+class Title extends React.Component {
+	render() {
+		return <h1>Проверка страны и имени</h1>
+	}
+}
+
+class Genderize extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = { name: "Ivan", gender: undefined, country: undefined, result: "Here will be result" };
+		this.handleSubmit = this.handleSubmit.bind(this);
+		this.handleChange = this.handleChange.bind(this);
+	}
+
+
+	handleSubmit(e) {
+		e.preventDefault();
+		const url1 = `${serverUrl1}?name=${this.state.name}`;
+		const url2 = `${serverUrl2}?name=${this.state.name}`;
+		fetch(url1)
+			.then(response => response.json())
+			.then(result1 => {
+				this.setState({ gender: result1.gender });
+				fetch(url2)
+					.then(response => response.json())
+					.then(result2 => {
+						this.setState({ country: result2.country[0].country_id });
+						let finalResult = `${this.state.name} is ${this.state.gender} from ${this.state.country} `;
+						this.setState({ result: finalResult })
+					});
+			});
+	}
+
+	handleChange() {
+		this.setState(prevState => {
+			prevState.name = event.target.value;
+		})
+	}
+
+	render() {
+		let isShort = this.state.name.length <= 2;
+		let div;
+		if (!isShort) {
+			div = <ResultDiv result={this.state.result} />
+		} else {
+			div = <ResultDiv result="The name is too short" />
+		}
+		return <div className="container">
+			<div className="task__body">
+				<Title />
+				<Form name={this.state.name} submit={this.handleSubmit} change={this.handleChange} />
+				{div}
+			</div>
+		</div>
+	}
 }
 
 export default App
